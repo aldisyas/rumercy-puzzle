@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#b7d7f4" />
+    <title>Rumercy Lucky Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="sticker sticker-top">lucky apple <span>✦</span></div>
+      <div class="yarn yarn-top" aria-hidden="true"></div>
+      <div class="yarn yarn-bottom" aria-hidden="true"></div>
+      <span class="apple apple-one" aria-hidden="true">✿</span>
+      <span class="apple apple-two" aria-hidden="true">✿</span>
+
+      <section class="puzzle-card" aria-labelledby="title">
+        <div class="paper-tape tape-left" aria-hidden="true"></div>
+        <div class="paper-tape tape-right" aria-hidden="true"></div>
+
+        <header class="hero">
+          <div class="clover-box" aria-hidden="true"><span>♥</span><i></i><b></b></div>
+          <div>
+            <p class="eyebrow">made with love · mincy!</p>
+            <h1 id="title">RUMERCY<br /><em>lucky puzzle</em></h1>
+          </div>
+        </header>
+
+        <p class="intro">Isi data dulu, lalu pecahkan tiga pertanyaan kecil untuk membuka hadiah spesialmu. Good luck, bestie! ♡</p>
+
+        <form id="puzzleForm" novalidate>
+          <fieldset class="step active" data-step="1">
+            <legend><span>01</span> Kenalan dulu yuk!</legend>
+            <label for="name">Nama kamu</label>
+            <input id="name" name="name" type="text" placeholder="Tulis nama kamu..." autocomplete="name" required />
+            <label for="group">Kelompok</label>
+            <input id="group" name="group" type="text" placeholder="Contoh: Kelompok A" required />
+            <p class="error-message" aria-live="polite"></p>
+            <button class="button primary" type="button" data-next>Mulai puzzle <span>→</span></button>
+          </fieldset>
+
+          <fieldset class="step" data-step="2">
+            <legend><span>02</span> Rumercy quiz</legend>
+            <div class="question">
+              <label for="answerOne">Sejak tanggal berapa Rumercy berdiri?</label>
+              <input id="answerOne" name="answerOne" type="text" placeholder="Contoh: 1 Januari 2024" required />
+            </div>
+            <div class="question">
+              <label for="answerTwo">Ada berapa admin Rumercy pada periode ini?</label>
+              <input id="answerTwo" name="answerTwo" type="text" inputmode="numeric" placeholder="Tulis jumlahnya..." required />
+            </div>
+            <div class="question">
+              <label for="answerThree">Siapa support Rumercy dalam membuat event ini?</label>
+              <input id="answerThree" name="answerThree" type="text" placeholder="Tulis namanya..." required />
+            </div>
+            <p class="error-message" aria-live="polite"></p>
+            <div class="button-row">
+              <button class="button secondary" type="button" data-back>← Kembali</button>
+              <button class="button primary" type="submit">Buka hadiah <span>✦</span></button>
+            </div>
+          </fieldset>
+        </form>
+
+        <section id="reward" class="reward" hidden aria-live="polite">
+          <div class="reward-star">✦</div>
+          <p class="eyebrow">yay, kamu berhasil!</p>
+          <h2>Hadiahmu sudah terbuka</h2>
+          <p>Terima kasih sudah ikut bermain, <strong id="winnerName">bestie</strong>! Simpan link kejutan ini ya.</p>
+          <div class="gift-link-wrap">
+            <a id="giftLink" href="https://example.com/hadiah-rumercy" target="_blank" rel="noopener">https://example.com/hadiah-rumercy</a>
+            <button id="copyButton" class="button copy-button" type="button">Salin link</button>
+          </div>
+          <p id="copyNotice" class="copy-notice" role="status"></p>
+          <button id="restartButton" class="text-button" type="button">Main lagi dari awal</button>
+        </section>
+      </section>
+
+      <p class="footer-note">made with tiny lucky wishes ♡</p>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
