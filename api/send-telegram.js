@@ -1,23 +1,58 @@
-export default async function handler(req, res) {
+export default async function handler(req) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      ok: false,
-      error: "Method not allowed"
-    });
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        error: "Method not allowed"
+      }),
+      {
+        status: 405,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
   }
 
   try {
-    const { name, group, time } = req.body;
+    const body = await req.json();
+
+    const { name, group, time } = body;
 
     if (!name || !group || !time) {
-      return res.status(400).json({
-        ok: false,
-        error: "Data tidak lengkap"
-      });
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: "Data tidak lengkap"
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
     }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (!token || !chatId) {
+      console.error("Environment variable Telegram belum tersedia.");
+
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: "Telegram configuration missing"
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
 
     const message =
       `🎉 *Puzzle Selesai!*\n\n` +
@@ -42,14 +77,29 @@ export default async function handler(req, res) {
 
     const result = await telegramResponse.json();
 
-    return res.status(200).json(result);
+    console.log("Telegram:", result);
+
+    return new Response(JSON.stringify(result), {
+      status: telegramResponse.ok ? 200 : 400,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
   } catch (error) {
-    console.error(error);
+    console.error("Server error:", error);
 
-    return res.status(500).json({
-      ok: false,
-      error: "Internal server error"
-    });
+    return new Response(
+      JSON.stringify({
+        ok: false,
+        error: error.message
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
   }
 }
