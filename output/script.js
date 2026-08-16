@@ -2,22 +2,28 @@
 // Setiap jawaban boleh memiliki beberapa variasi penulisan.
 const QUIZ_CONFIG = {
   answers: {
-    answerOne: ["1 januari 2024", "01 januari 2024", "01/01/2024", "1/1/2024"],
-    answerTwo: ["5", "lima"],
-    answerThree: ["Fraggment"]
+    answerOne: ["pasensyana"],
+    answerTwo: ["hnrrumercybot", "lima"],
+    answerThree: ["Minggu", "minggu"],
+    answerFour: ["Moocy", "moocy"],
+    answerFive: ["6", "enam", "Enam"]
   },
-  giftUrl: "https://example.com/hadiah-rumercy"
+  rewardBinary: "01010100 01100101 01101011 01110011 00100000 01100001 01100100 01101101 01101001 01101110 00100000 01000000 01110000 01010011 01110100 01110010 01100001 01110111 01100010 01100101 01110010 01110010 01111001"
 };
+
+// ====== KONFIGURASI TELEGRAM ======
+const TELEGRAM_BOT_TOKEN = "8758374498:AAEjhAUnO90VskyhKYgGkdPqC5BSXcmQpJ0";
+const TELEGRAM_CHAT_ID = "4331124456";
+// ==================================
 
 const form = document.querySelector("#puzzleForm");
 const steps = [...document.querySelectorAll(".step")];
 const reward = document.querySelector("#reward");
-const giftLink = document.querySelector("#giftLink");
+const rewardText = document.querySelector("#rewardText");
 const copyButton = document.querySelector("#copyButton");
 const copyNotice = document.querySelector("#copyNotice");
 
-giftLink.href = QUIZ_CONFIG.giftUrl;
-giftLink.textContent = QUIZ_CONFIG.giftUrl;
+rewardText.textContent = QUIZ_CONFIG.rewardBinary;
 
 function showStep(stepNumber) {
   steps.forEach((step) => step.classList.toggle("active", Number(step.dataset.step) === stepNumber));
@@ -29,6 +35,29 @@ function setError(stepNumber, message = "") {
 
 function normalize(value) {
   return value.toLowerCase().trim().replace(/\s+/g, " ").replace(/[.,]/g, "");
+}
+
+async function sendTelegramReport(name, group, time) {
+  const message = `🎉 *Puzzle Selesai!*\n\n` +
+    `👤 Nama: ${name}\n` +
+    `📚 Kelompok: ${group}\n` +
+    `🕒 Waktu: ${time}`;
+
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "Markdown"
+      })
+    });
+  } catch (error) {
+    console.error("Gagal kirim ke Telegram:", error);
+  }
 }
 
 document.querySelector("[data-next]").addEventListener("click", () => {
@@ -48,7 +77,7 @@ document.querySelector("[data-back]").addEventListener("click", () => showStep(1
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const allFilled = ["answerOne", "answerTwo", "answerThree"].every((name) => form.elements[name].value.trim());
+  const allFilled = ["answerOne", "answerTwo", "answerThree", "answerFour", "answerFive"].every((name) => form.elements[name].value.trim());
   if (!allFilled) {
     setError(2, "Jangan ada yang terlewat, ya!");
     return;
@@ -59,7 +88,7 @@ form.addEventListener("submit", (event) => {
   );
 
   if (!correct) {
-    setError(2, "Ada jawaban yang belum tepat. Coba cek lagi, bestie! ✦");
+    setError(2, "Ada jawaban yang belum tepat. Coba cek lagi, moocy! ✦");
     return;
   }
 
@@ -67,20 +96,44 @@ form.addEventListener("submit", (event) => {
   reward.hidden = false;
   document.querySelector("#winnerName").textContent = form.elements.name.value.trim();
   reward.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  form.hidden = true;
+  reward.hidden = false;
+  document.querySelector("#winnerName").textContent = form.elements.name.value.trim();
+  reward.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  // ====== KODE BARU: Kirim laporan ke Telegram ======
+  const now = new Date();
+  const timeString = now.toLocaleString("id-ID", {
+    timeZone: "Asia/Jakarta",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  sendTelegramReport(
+    form.elements.name.value.trim(),
+    form.elements.group.value.trim(),
+    timeString
+  );
+  // ==================================================
 });
 
 copyButton.addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText(QUIZ_CONFIG.giftUrl);
+    await navigator.clipboard.writeText(QUIZ_CONFIG.rewardBinary);
   } catch {
     const helper = document.createElement("textarea");
-    helper.value = QUIZ_CONFIG.giftUrl;
+    helper.value = QUIZ_CONFIG.rewardBinary;
     document.body.appendChild(helper);
     helper.select();
     document.execCommand("copy");
     helper.remove();
   }
-  copyNotice.textContent = "Link berhasil disalin ✦";
+  copyNotice.textContent = "Biner berhasil disalin ✦";
   copyButton.textContent = "Tersalin!";
   setTimeout(() => { copyButton.textContent = "Salin link"; }, 1800);
 });

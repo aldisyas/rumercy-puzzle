@@ -30,7 +30,7 @@
           </div>
         </header>
 
-        <p class="intro">Isi data dulu, lalu pecahkan tiga pertanyaan kecil untuk membuka hadiah spesialmu. Good luck, bestie! ♡</p>
+        <p class="intro">Quiz time! Isi data diri dan pecahkan lima pertanyaan untuk mendapatkan kepingan hadiah spesialmu. Good luck, moocy! ♡</p>
 
         <form id="puzzleForm" novalidate>
           <fieldset class="step active" data-step="1">
@@ -46,16 +46,24 @@
           <fieldset class="step" data-step="2">
             <legend><span>02</span> Rumercy quiz</legend>
             <div class="question">
-              <label for="answerOne">Sejak tanggal berapa Rumercy berdiri?</label>
-              <input id="answerOne" name="answerOne" type="text" placeholder="Contoh: 1 Januari 2024" required />
+              <label for="answerOne">Siapakah owner Rumercy? (sebutkan usn tanpa @ dan ditulis lowercase)</label>
+              <input id="answerOne" name="answerOne" type="text" placeholder="Tanpa @ dan lowercase semua ya" required />
             </div>
             <div class="question">
-              <label for="answerTwo">Ada berapa admin Rumercy pada periode ini?</label>
-              <input id="answerTwo" name="answerTwo" type="text" inputmode="numeric" placeholder="Tulis jumlahnya..." required />
+              <label for="answerTwo">Kalau ada HNR/Penipuan, lapor ke bot mana? (sebutkan usn tanpa @ dan ditulis lowercase)</label>
+              <input id="answerTwo" name="answerTwo" type="text" inputmode="numeric" placeholder="Tanpa @ dan lowercase semua ya" required />
             </div>
             <div class="question">
-              <label for="answerThree">Siapa support Rumercy dalam membuat event ini?</label>
-              <input id="answerThree" name="answerThree" type="text" placeholder="Tulis namanya..." required />
+              <label for="answerThree">Setiap hari apa Rumercy jeda satu sesi?</label>
+              <input id="answerThree" name="answerThree" type="text" placeholder="Hari apa hayo..." required />
+            </div>
+            <div class="question">
+              <label for="answerFour">Sebutan untuk admin adalah Mincy, lalu apakah sebutan yang diberikan untuk owner & bidder?</label>
+              <input id="answerFour" name="answerFour" type="text" placeholder="Apa ya sebutannya..." required />
+            </div>
+            <div class="question">
+              <label for="answerFive">Berapa total gift upg yang ada di pf channel Rumercy?</label>
+              <input id="answerFive" name="answerFive" type="text" placeholder="Sebutkan angka saja" required />
             </div>
             <p class="error-message" aria-live="polite"></p>
             <div class="button-row">
@@ -69,11 +77,17 @@
           <div class="reward-star">✦</div>
           <p class="eyebrow">yay, kamu berhasil!</p>
           <h2>Hadiahmu sudah terbuka</h2>
-          <p>Terima kasih sudah ikut bermain, <strong id="winnerName">bestie</strong>! Simpan link kejutan ini ya.</p>
+          <p>Selamat, <strong id="winnerName">bestie</strong>! Kamu telah mmelewati tantangan pertama, jangan lupa screenshot laman ini ya!</p>
           <div class="gift-link-wrap">
-            <a id="giftLink" href="https://example.com/hadiah-rumercy" target="_blank" rel="noopener">https://example.com/hadiah-rumercy</a>
-            <button id="copyButton" class="button copy-button" type="button">Salin link</button>
-          </div>
+            <div id="rewardText" class="binary-reward"></div>
+               <button id="copyButton" class="button copy-button" type="button">
+               Salin biner
+               </button>
+            </div>
+            <p class="binary-hint">
+              Hint ✦ Biner ini dapat diterjemahkan menjadi teks menggunakan ASCII.
+              Pecahkan teka-teki dari biner diatas.
+            </p>
           <p id="copyNotice" class="copy-notice" role="status"></p>
           <button id="restartButton" class="text-button" type="button">Main lagi dari awal</button>
         </section>
