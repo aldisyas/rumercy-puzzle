@@ -11,11 +11,6 @@ const QUIZ_CONFIG = {
   rewardBinary: "01010100 01100101 01101011 01110011 00100000 01100001 01100100 01101101 01101001 01101110 00100000 01000000 01110000 01010011 01110100 01110010 01100001 01110111 01100010 01100101 01110010 01110010 01111001"
 };
 
-// ====== KONFIGURASI TELEGRAM ======
-const TELEGRAM_BOT_TOKEN = "8758374498:AAEjhAUnO90VskyhKYgGkdPqC5BSXcmQpJ0";
-const TELEGRAM_CHAT_ID = "-1004331124456";
-// ==================================
-
 const form = document.querySelector("#puzzleForm");
 const steps = [...document.querySelectorAll(".step")];
 const reward = document.querySelector("#reward");
@@ -38,25 +33,28 @@ function normalize(value) {
 }
 
 async function sendTelegramReport(name, group, time) {
-  const message = `🎉 *Puzzle Selesai!*\n\n` +
-    `👤 Nama: ${name}\n` +
-    `📚 Kelompok: ${group}\n` +
-    `🕒 Waktu: ${time}`;
-
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
   try {
-    await fetch(url, {
+    const response = await fetch("/api/send-telegram", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: "Markdown"
+        name,
+        group,
+        time
       })
     });
+
+    const result = await response.json();
+
+    console.log("Telegram response:", result);
+
+    if (!result.ok) {
+      console.error("Telegram gagal:", result);
+    }
   } catch (error) {
-    console.error("Gagal kirim ke Telegram:", error);
+    console.error("Gagal mengirim ke Telegram:", error);
   }
 }
 
