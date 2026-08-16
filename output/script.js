@@ -13,7 +13,7 @@ const QUIZ_CONFIG = {
 
 // ====== KONFIGURASI TELEGRAM ======
 const TELEGRAM_BOT_TOKEN = "8758374498:AAEjhAUnO90VskyhKYgGkdPqC5BSXcmQpJ0";
-const TELEGRAM_CHAT_ID = "4331124456";
+const TELEGRAM_CHAT_ID = "-1004331124456";
 // ==================================
 
 const form = document.querySelector("#puzzleForm");
