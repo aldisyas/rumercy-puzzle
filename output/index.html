@@ -75,22 +75,55 @@
 
         <section id="reward" class="reward" hidden aria-live="polite">
           <div class="reward-star">✦</div>
+
           <p class="eyebrow">yay, kamu berhasil!</p>
+
           <h2>Hadiahmu sudah terbuka</h2>
-          <p>Selamat, <strong id="winnerName">bestie</strong>! Kamu telah melewati tantangan pertama, jangan lupa screenshot laman ini ya!</p>
-          <div class="gift-link-wrap">
-            <div id="rewardText" class="binary-reward"></div>
-               <button id="copyButton" class="button copy-button" type="button">
-               Salin biner
-               </button>
-            </div>
-            <p class="binary-hint">
-              Hint ✦ Biner ini dapat diterjemahkan menjadi teks menggunakan ASCII.
-              Pecahkan teka-teki dari biner diatas.
-            </p>
-          <p id="copyNotice" class="copy-notice" role="status"></p>
-          <button id="restartButton" class="text-button" type="button">Main lagi dari awal</button>
-        </section>
+
+          <p>
+            Selamat, <strong id="winnerName">bestie</strong>!
+            Kamu berhasil melewati tantangan pertama.
+          </p>
+
+         <div class="scratch-section">
+         <p class="scratch-title">✦ scratch me to reveal your gift ✦</p>
+
+         <div class="scratch-card" id="scratchCard">
+         <div class="binary-reveal">
+           <div id="rewardText" class="binary-reward"></div>
+         </div>
+
+         <canvas id="scratchCanvas"></canvas>
+
+         <div class="scratch-label">
+           <span>✦</span>
+           GOSOK DI SINI
+           <span>✦</span>
+         </div>
+         </div>
+
+         <p id="scratchHint" class="scratch-hint">
+          Gosok bagian abu-abunya sampai hadiahnya terlihat ♡
+         </p>
+         </div>
+
+         <div class="gift-link-wrap">
+         <button id="copyButton" class="button copy-button" type="button" disabled>
+          Salin biner
+         </button>
+         </div>
+
+         <p class="binary-hint">
+          Hint ✦ Biner ini dapat diterjemahkan menjadi teks menggunakan ASCII.
+          Pecahkan teka-teki dari biner di atas.
+         </p>
+
+         <p id="copyNotice" class="copy-notice" role="status"></p>
+
+         <button id="restartButton" class="text-button" type="button">
+          Main lagi dari awal
+         </button>
+       </section>
       </section>
 
       <p class="footer-note">made with tiny lucky wishes ♡</p>

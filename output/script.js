@@ -20,6 +20,195 @@ const copyNotice = document.querySelector("#copyNotice");
 
 rewardText.textContent = QUIZ_CONFIG.rewardBinary;
 
+// =========================
+// SCRATCH CARD
+// =========================
+
+const scratchCanvas = document.querySelector("#scratchCanvas");
+const scratchCard = document.querySelector("#scratchCard");
+const scratchHint = document.querySelector("#scratchHint");
+
+const canvasContext = scratchCanvas.getContext("2d", {
+  willReadFrequently: true
+});
+
+let isScratching = false;
+let scratchStarted = false;
+let scratchRevealed = false;
+
+function setupScratchCard() {
+  const rect = scratchCard.getBoundingClientRect();
+
+  const dpr = window.devicePixelRatio || 1;
+
+  scratchCanvas.width = rect.width * dpr;
+  scratchCanvas.height = rect.height * dpr;
+
+  scratchCanvas.style.width = `${rect.width}px`;
+  scratchCanvas.style.height = `${rect.height}px`;
+
+  canvasContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // Lapisan scratch
+  canvasContext.fillStyle = "#a9cce8";
+  canvasContext.fillRect(0, 0, rect.width, rect.height);
+
+  // Tekstur sederhana
+  canvasContext.fillStyle = "rgba(255, 255, 255, 0.18)";
+
+  for (let x = 0; x < rect.width; x += 18) {
+    for (let y = 0; y < rect.height; y += 18) {
+      canvasContext.beginPath();
+      canvasContext.arc(x, y, 2, 0, Math.PI * 2);
+      canvasContext.fill();
+    }
+  }
+}
+
+function getScratchPosition(event) {
+  const rect = scratchCanvas.getBoundingClientRect();
+
+  let clientX;
+  let clientY;
+
+  if (event.touches && event.touches.length > 0) {
+    clientX = event.touches[0].clientX;
+    clientY = event.touches[0].clientY;
+  } else if (event.changedTouches && event.changedTouches.length > 0) {
+    clientX = event.changedTouches[0].clientX;
+    clientY = event.changedTouches[0].clientY;
+  } else {
+    clientX = event.clientX;
+    clientY = event.clientY;
+  }
+
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
+function scratch(event) {
+  if (!isScratching || scratchRevealed) return;
+
+  event.preventDefault();
+
+  const { x, y } = getScratchPosition(event);
+
+  canvasContext.globalCompositeOperation = "destination-out";
+
+  canvasContext.beginPath();
+  canvasContext.arc(x, y, 24, 0, Math.PI * 2);
+  canvasContext.fill();
+
+  scratchStarted = true;
+
+  checkScratchProgress();
+}
+
+function checkScratchProgress() {
+  if (!scratchStarted || scratchRevealed) return;
+
+  const width = scratchCanvas.width;
+  const height = scratchCanvas.height;
+
+  const imageData = canvasContext.getImageData(
+    0,
+    0,
+    width,
+    height
+  );
+
+  let transparentPixels = 0;
+
+  // Cek setiap beberapa pixel supaya lebih ringan di HP
+  for (let i = 3; i < imageData.data.length; i += 16) {
+    if (imageData.data[i] < 100) {
+      transparentPixels++;
+    }
+  }
+
+  const totalPixels = imageData.data.length / 16;
+  const scratchedPercentage =
+    (transparentPixels / totalPixels) * 100;
+
+  if (scratchedPercentage >= 55) {
+    revealScratch();
+  }
+}
+
+function revealScratch() {
+  scratchRevealed = true;
+
+  scratchCanvas.style.transition = "opacity 0.5s ease";
+  scratchCanvas.style.opacity = "0";
+
+  scratchCard.classList.add("revealed");
+
+  scratchHint.textContent =
+    "Yay! Hadiahnya berhasil ditemukan ✦";
+
+  copyButton.disabled = false;
+
+  setTimeout(() => {
+    scratchCanvas.remove();
+  }, 600);
+}
+
+// Mouse
+scratchCanvas.addEventListener("mousedown", (event) => {
+  isScratching = true;
+  scratch(event);
+});
+
+scratchCanvas.addEventListener("mousemove", scratch);
+
+window.addEventListener("mouseup", () => {
+  isScratching = false;
+});
+
+// Touch / HP
+scratchCanvas.addEventListener(
+  "touchstart",
+  (event) => {
+    isScratching = true;
+    scratch(event);
+  },
+  { passive: false }
+);
+
+scratchCanvas.addEventListener(
+  "touchmove",
+  scratch,
+  { passive: false }
+);
+
+scratchCanvas.addEventListener(
+  "touchend",
+  () => {
+    isScratching = false;
+  },
+  { passive: true }
+);
+
+// Setup ketika reward dibuka
+function initializeScratch() {
+  scratchRevealed = false;
+  scratchStarted = false;
+
+  scratchCanvas.style.opacity = "1";
+  scratchCanvas.style.transition = "";
+
+  scratchCard.classList.remove("revealed");
+
+  copyButton.disabled = true;
+
+  scratchHint.textContent =
+    "Gosok bagian abu-abunya sampai hadiahnya terlihat ♡";
+
+  setupScratchCard();
+}
+
 function showStep(stepNumber) {
   steps.forEach((step) => step.classList.toggle("active", Number(step.dataset.step) === stepNumber));
 }
@@ -92,13 +281,18 @@ form.addEventListener("submit", (event) => {
 
   form.hidden = true;
   reward.hidden = false;
-  document.querySelector("#winnerName").textContent = form.elements.name.value.trim();
-  reward.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  form.hidden = true;
-  reward.hidden = false;
-  document.querySelector("#winnerName").textContent = form.elements.name.value.trim();
-  reward.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.querySelector("#winnerName").textContent =
+  form.elements.name.value.trim();
+
+  reward.scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+  });
+
+  setTimeout(() => {
+  initializeScratch();
+  }, 300);
 
   // ====== KODE BARU: Kirim laporan ke Telegram ======
   const now = new Date();
