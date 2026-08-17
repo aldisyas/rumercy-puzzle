@@ -1,14 +1,6 @@
-export default async function handler(req) {
-  return new Response(
-    JSON.stringify({
-      ok: true,
-      message: "API Rumercy aktif!"
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }
-  );
+export default function handler(req, res) {
+  res.status(200).json({
+    ok: true,
+    message: "API Rumercy aktif!"
+  });
 }
